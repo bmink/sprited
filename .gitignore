@@ -1,0 +1,6 @@
+sprited
+.DS_Store
+*.o
+*.swp
+*.json
+out*
