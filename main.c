@@ -523,6 +523,105 @@ sprite_issquare(sprite_t *sp)
 }
 
 
+void
+sprite2bytes(barr_t *sprites, int horiz)
+{
+	int		bitcnt;
+	int		bytecnt;
+	sprite_t	*sp;
+	int		x;
+	int		y;
+	uint8_t		byte;
+	int		printedcnt;
+	int		i;
+	int		spriteidx;	
+
+	if(barr_cnt(sprites) == 0) {
+		return;
+	}
+
+	bitcnt = 0;
+	for(sp = (sprite_t *)barr_begin(sprites);
+	    sp < (sprite_t *)barr_end(sprites); ++sp) {
+		if(sp == (sprite_t *)barr_begin(sprites)) {
+			bitcnt = bstrlen(sp->sp_pixels);
+		} else {
+			if(bitcnt != bstrlen(sp->sp_pixels)) {
+				fprintf(stderr, "Sprites in file have"
+				    " differing pixel counts\n");
+				return;
+			}
+		}
+		if(sp->sp_width % 8 || sp->sp_height % 8) {
+			fprintf(stderr, "Sprite with /height is not divisible"
+			    " by 8\n");
+			return;
+	}
+
+	}
+
+	if(bitcnt <= 0) {
+		fprintf(stderr, "Invalid pixel count\n");
+		return;
+	}
+
+	bytecnt = bitcnt / 8;
+
+	if(barr_cnt(sprites) == 1) {
+		printf("uint8_t	<buf_name>[%d] = \n", bytecnt);
+	} else {
+		printf("uint8_t	<buf_array_name>[%d][%d] = {\n",
+		    barr_cnt(sprites), bytecnt);
+	}
+
+	for(spriteidx = 0; spriteidx < barr_cnt(sprites); ++spriteidx) {
+
+		sp = (sprite_t *)barr_elem(sprites, spriteidx);
+		byte = 0;
+		printedcnt = 0;
+		printf("\t{ /* \"%s\" (%dx%d): %s mapping */\n",
+		    bget(sp->sp_name), sp->sp_width, sp->sp_height,
+		    horiz?"horizontal":"vertical");
+		printf("\t  ");
+		if(horiz) {
+			for(y = 0; y < sp->sp_height; ++y) {
+				for(x = 0; x < sp->sp_width; x += 8) {
+					for(i = 0; i < 8; ++i) {
+						if(ispixelon(sp, x + i, y))
+							byte |= 0x01;
+
+						byte <<= 1;
+					}
+
+					printf("0x%02x", byte);
+					++printedcnt;
+					if(printedcnt < bytecnt) {
+						printf(",");
+
+						if(printedcnt % 8 == 0)
+							printf("\n\t  ");
+						else
+							printf(" ");
+					}
+
+					byte = 0;
+				}
+			}
+			if(barr_cnt(sprites) == 1) 
+				printf(" };\n");
+			else
+				printf(" }%s\n",
+				    spriteidx < barr_cnt(sprites) - 1?",\n":"");
+		}
+	}
+
+	if(barr_cnt(sprites) > 1)
+		printf("};\n\n");
+	else
+		printf("\n");
+}
+
+
 int
 main(int argc, char **argv)
 {
@@ -663,6 +762,15 @@ main(int argc, char **argv)
 		}
 		flipsprite(barr_elem(sprites, 0),
 		    !xstrcmp(argv[2], "fliph")?1:0);
+	} else
+	if(!xstrcmp(argv[2], "tobytesh") || !xstrcmp(argv[2], "tobytesv")) {
+		if(argc != 3) {
+			usage(execn);
+			err = -1;
+			goto end_label;
+		}
+
+		sprite2bytes(sprites, !xstrcmp(argv[2], "tobytesh")?1:0);
 	} else {
 		fprintf(stderr, "Unknown command: %s\n", argv[2]);
 		err = -1;
@@ -678,6 +786,7 @@ end_label:
 
 	return err;
 }
+
 
 
 void
@@ -714,9 +823,14 @@ usage(const char *progn)
 	printf("    %s <spritefile.json> flipv\n",
 	    progn);
 	printf("\n");
-	printf("  Convert to C byte array:\n");
+	printf("  Convert to C horizontal-mapped byte array:\n");
 	printf("\n");
-	printf("    %s <spritefile.json> convert <horizontal|vertical>\n",
+	printf("    %s <spritefile.json> tobytesh\n",
+	    progn);
+	printf("\n");
+	printf("  Convert to C vertical-mapped byte array:\n");
+	printf("\n");
+	printf("    %s <spritefile.json> tobytesv\n",
 	    progn);
 	printf("\n");
 }
