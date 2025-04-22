@@ -821,10 +821,13 @@ usage(const char *progn)
 	printf("  Display sprite(s):\n");
 	printf("\n");
 	printf("    %s <spritefile.json> display\n", progn);
+	printf("    %s <spritefile.json> invdisplay\n", progn);
 	printf("\n");
 	printf("  Playback sprite animation:\n");
 	printf("\n");
 	printf("    %s <spritefile.json> animate <milliseconds> <loopcnt>\n",
+	    progn);
+	printf("    %s <spritefile.json> invanimate <milliseconds> <loopcnt>\n",
 	    progn);
 	printf("\n");
 	printf("  Rotate sprite to specified degrees:\n");
