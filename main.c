@@ -607,12 +607,37 @@ sprite2bytes(barr_t *sprites, int horiz)
 					byte = 0;
 				}
 			}
-			if(barr_cnt(sprites) == 1) 
-				printf(" };\n");
-			else
-				printf(" }%s\n",
-				    spriteidx < barr_cnt(sprites) - 1?",\n":"");
+		} else { /* Vertical mapping */
+
+			for(x = 0; x < sp->sp_width; ++x) {
+				for(y = 0; y < sp->sp_height; y += 8) {
+					for(i = 0; i < 8; ++i) {
+						if(ispixelon(sp, x, y + i))
+							byte |= 0x01;
+
+						byte <<= 1;
+					}
+
+					printf("0x%02x", byte);
+					++printedcnt;
+					if(printedcnt < bytecnt) {
+						printf(",");
+
+						if(printedcnt % 8 == 0)
+							printf("\n\t  ");
+						else
+							printf(" ");
+					}
+
+					byte = 0;
+				}
+			}
 		}
+		if(barr_cnt(sprites) == 1) 
+			printf(" };\n");
+		else
+			printf(" }%s\n",
+			    spriteidx < barr_cnt(sprites) - 1?",\n":"");
 	}
 
 	if(barr_cnt(sprites) > 1)
