@@ -587,10 +587,10 @@ sprite2bytes(barr_t *sprites, int horiz)
 			for(y = 0; y < sp->sp_height; ++y) {
 				for(x = 0; x < sp->sp_width; x += 8) {
 					for(i = 0; i < 8; ++i) {
+						byte <<= 1;
 						if(ispixelon(sp, x + i, y))
 							byte |= 0x01;
 
-						byte <<= 1;
 					}
 
 					printf("0x%02x", byte);
@@ -609,13 +609,12 @@ sprite2bytes(barr_t *sprites, int horiz)
 			}
 		} else { /* Vertical mapping */
 
-			for(x = 0; x < sp->sp_width; ++x) {
-				for(y = 0; y < sp->sp_height; y += 8) {
-					for(i = 0; i < 8; ++i) {
+			for(y = 0; y < sp->sp_height; y += 8) {
+				for(x = 0; x < sp->sp_width; ++x) {
+					for(i = 7; i >= 0; --i) {
+						byte <<= 1;
 						if(ispixelon(sp, x, y + i))
 							byte |= 0x01;
-
-						byte <<= 1;
 					}
 
 					printf("0x%02x", byte);
