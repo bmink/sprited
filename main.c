@@ -260,20 +260,23 @@ void
 displaysprites(barr_t *sprites, int invert)
 {
 	sprite_t	*sp;
+	int		idx;
 
 	if(sprites == NULL)
 		return;
 
-	for(sp = barr_begin(sprites); sp < (sprite_t *) barr_end(sprites);
-	    ++sp) {
+	for(sp = barr_begin(sprites), idx = 0;
+	    sp < (sprite_t *) barr_end(sprites);
+	    ++sp, ++idx) {
 
-		printf("\n\"%s\" (%d x %d)\n", bget(sp->sp_name), sp->sp_width,
-		    sp->sp_height);
+		printf("\n(%d) \"%s\" (%d x %d)\n", idx, bget(sp->sp_name),
+		    sp->sp_width, sp->sp_height);
 
 		dispsp(sp, invert);
 	}
 
 }
+
 
 #define BIL_INTERPOL_THRESH	45
 
@@ -646,6 +649,150 @@ sprite2bytes(barr_t *sprites, int horiz)
 }
 
 
+
+void outpsp(barr_t *sprites, int idx, const char *nam, int last)
+{
+	int		x;
+	int 		y;
+	sprite_t	*sp;
+
+	sp = barr_elem(sprites, idx);
+	if(sp == NULL)
+		return;	
+
+	printf("  {\n");
+	printf("    \"name\": \"%s\",\n", nam);
+	printf("    \"width\": %d,\n", sp->sp_width);
+	printf("    \"height\": %d,\n", sp->sp_height);
+	printf("    \"pixels\": [\n");
+	for(y = 0; y < sp->sp_height; ++y) {
+		printf("      \"");
+		for(x = 0; x < sp->sp_width; ++x) {
+			if(ispixelon(sp, x, y))
+				printf("X");
+			else
+				printf(".");
+			
+		}
+		printf("\"%s\n", y < sp->sp_height - 1?",":"");
+	}
+	
+	printf("    ]\n");
+	printf("  }%s\n", last?"":",");
+}
+
+void
+conv_c64_rom_order_to_ascii(barr_t *sprites)
+{
+
+	if(sprites == NULL || barr_cnt(sprites) < 283)
+		return;
+	
+	printf("[\n");
+
+	outpsp(sprites, 32, "ASCII 0x20 ' '", 0);
+	outpsp(sprites, 33, "ASCII 0x21 '!'", 0);
+	outpsp(sprites, 34, "ASCII 0x22 '\\\"'", 0);
+	outpsp(sprites, 35, "ASCII 0x23 '#'", 0);
+	outpsp(sprites, 36, "ASCII 0x24 '$'", 0);
+	outpsp(sprites, 37, "ASCII 0x25 '%'", 0);
+	outpsp(sprites, 38, "ASCII 0x26 '&'", 0);
+	outpsp(sprites, 39, "ASCII 0x27 '\'", 0);
+	outpsp(sprites, 40, "ASCII 0x28 '('", 0);
+	outpsp(sprites, 41, "ASCII 0x29 ')'", 0);
+	outpsp(sprites, 42, "ASCII 0x2a '*'", 0);
+	outpsp(sprites, 43, "ASCII 0x2b '+'", 0);
+	outpsp(sprites, 44, "ASCII 0x2c ','", 0);
+	outpsp(sprites, 45, "ASCII 0x2d '-'", 0);
+	outpsp(sprites, 46, "ASCII 0x2e '.'", 0);
+	outpsp(sprites, 47, "ASCII 0x2f '/'", 0);
+	outpsp(sprites, 48, "ASCII 0x30 '0'", 0);
+	outpsp(sprites, 49, "ASCII 0x31 '1'", 0);
+	outpsp(sprites, 50, "ASCII 0x32 '2'", 0);
+	outpsp(sprites, 51, "ASCII 0x33 '3'", 0);
+	outpsp(sprites, 52, "ASCII 0x34 '4'", 0);
+	outpsp(sprites, 53, "ASCII 0x35 '5'", 0);
+	outpsp(sprites, 54, "ASCII 0x36 '6'", 0);
+	outpsp(sprites, 55, "ASCII 0x37 '7'", 0);
+	outpsp(sprites, 56, "ASCII 0x38 '8'", 0);
+	outpsp(sprites, 57, "ASCII 0x39 '9'", 0);
+	outpsp(sprites, 58, "ASCII 0x3a ':'", 0);
+	outpsp(sprites, 59, "ASCII 0x3b ';'", 0);
+	outpsp(sprites, 60, "ASCII 0x3c '<'", 0);
+	outpsp(sprites, 61, "ASCII 0x3d '='", 0);
+	outpsp(sprites, 62, "ASCII 0x3e '>'", 0);
+	outpsp(sprites, 63, "ASCII 0x3f '?'", 0);
+	outpsp(sprites, 0, "ASCII 0x40 '@'", 0);
+	outpsp(sprites, 1, "ASCII 0x41 'A'", 0);
+	outpsp(sprites, 2, "ASCII 0x42 'B'", 0);
+	outpsp(sprites, 3, "ASCII 0x43 'C'", 0);
+	outpsp(sprites, 4, "ASCII 0x44 'D'", 0);
+	outpsp(sprites, 5, "ASCII 0x45 'E'", 0);
+	outpsp(sprites, 6, "ASCII 0x46 'F'", 0);
+	outpsp(sprites, 7, "ASCII 0x47 'G'", 0);
+	outpsp(sprites, 8, "ASCII 0x48 'H'", 0);
+	outpsp(sprites, 9, "ASCII 0x49 'I'", 0);
+	outpsp(sprites, 10, "ASCII 0x4a 'J'", 0);
+	outpsp(sprites, 11, "ASCII 0x4b 'K'", 0);
+	outpsp(sprites, 12, "ASCII 0x4c 'L'", 0);
+	outpsp(sprites, 13, "ASCII 0x4d 'M'", 0);
+	outpsp(sprites, 14, "ASCII 0x4e 'N'", 0);
+	outpsp(sprites, 15, "ASCII 0x4f 'O'", 0);
+	outpsp(sprites, 16, "ASCII 0x50 'P'", 0);
+	outpsp(sprites, 17, "ASCII 0x51 'Q'", 0);
+	outpsp(sprites, 18, "ASCII 0x52 'R'", 0);
+	outpsp(sprites, 19, "ASCII 0x53 'S'", 0);
+	outpsp(sprites, 20, "ASCII 0x54 'T'", 0);
+	outpsp(sprites, 21, "ASCII 0x55 'U'", 0);
+	outpsp(sprites, 22, "ASCII 0x56 'V'", 0);
+	outpsp(sprites, 23, "ASCII 0x57 'W'", 0);
+	outpsp(sprites, 24, "ASCII 0x58 'X'", 0);
+	outpsp(sprites, 25, "ASCII 0x59 'Y'", 0);
+	outpsp(sprites, 26, "ASCII 0x5a 'Z'", 0);
+	outpsp(sprites, 27, "ASCII 0x5b '['", 0);
+	outpsp(sprites, 32, "ASCII 0x5c '\\'", 0);
+	outpsp(sprites, 29, "ASCII 0x5d ']'", 0);
+	outpsp(sprites, 32, "ASCII 0x5e '^'", 0);
+	outpsp(sprites, 32, "ASCII 0x5f '_'", 0);
+	outpsp(sprites, 32, "ASCII 0x60 '`'", 0);
+	outpsp(sprites, 257, "ASCII 0x61 'a'", 0);
+	outpsp(sprites, 258, "ASCII 0x62 'b'", 0);
+	outpsp(sprites, 259, "ASCII 0x63 'c'", 0);
+	outpsp(sprites, 260, "ASCII 0x64 'd'", 0);
+	outpsp(sprites, 261, "ASCII 0x65 'e'", 0);
+	outpsp(sprites, 262, "ASCII 0x66 'f'", 0);
+	outpsp(sprites, 263, "ASCII 0x67 'g'", 0);
+	outpsp(sprites, 264, "ASCII 0x68 'h'", 0);
+	outpsp(sprites, 265, "ASCII 0x69 'i'", 0);
+	outpsp(sprites, 266, "ASCII 0x6a 'j'", 0);
+	outpsp(sprites, 267, "ASCII 0x6b 'k'", 0);
+	outpsp(sprites, 268, "ASCII 0x6c 'l'", 0);
+	outpsp(sprites, 269, "ASCII 0x6d 'm'", 0);
+	outpsp(sprites, 270, "ASCII 0x6e 'n'", 0);
+	outpsp(sprites, 271, "ASCII 0x6f 'o'", 0);
+	outpsp(sprites, 272, "ASCII 0x70 'p'", 0);
+	outpsp(sprites, 273, "ASCII 0x71 'q'", 0);
+	outpsp(sprites, 274, "ASCII 0x72 'r'", 0);
+	outpsp(sprites, 275, "ASCII 0x73 's'", 0);
+	outpsp(sprites, 276, "ASCII 0x74 't'", 0);
+	outpsp(sprites, 277, "ASCII 0x75 'u'", 0);
+	outpsp(sprites, 278, "ASCII 0x76 'v'", 0);
+	outpsp(sprites, 279, "ASCII 0x77 'w'", 0);
+	outpsp(sprites, 280, "ASCII 0x78 'x'", 0);
+	outpsp(sprites, 281, "ASCII 0x79 'y'", 0);
+	outpsp(sprites, 282, "ASCII 0x7a 'z'", 0);
+	outpsp(sprites, 32, "ASCII 0x7b '{'", 0);
+	outpsp(sprites, 32, "ASCII 0x7c '|'", 0);
+	outpsp(sprites, 32, "ASCII 0x7d '}", 0);
+	outpsp(sprites, 32, "ASCII 0x7e '~'", 1);
+
+	
+	printf("]\n");
+
+
+}
+
+
 int
 main(int argc, char **argv)
 {
@@ -795,6 +942,15 @@ main(int argc, char **argv)
 		}
 
 		sprite2bytes(sprites, !xstrcmp(argv[2], "tobytesh")?1:0);
+	} else
+	if(!xstrcmp(argv[2], "c64toascii")) {
+		if(argc != 3) {
+			usage(execn);
+			err = -1;
+			goto end_label;
+		}
+
+		conv_c64_rom_order_to_ascii(sprites);
 	} else {
 		fprintf(stderr, "Unknown command: %s\n", argv[2]);
 		err = -1;
@@ -858,6 +1014,12 @@ usage(const char *progn)
 	printf("  Convert to C vertical-mapped byte array:\n");
 	printf("\n");
 	printf("    %s <spritefile.json> tobytesv\n",
+	    progn);
+	printf("\n");
+	printf("  Convert font from PETSCII (Commodore 8-bit"
+	    " order to ASCII order:\n");
+	printf("\n");
+	printf("    %s <spritefile.json> c64toascii\n",
 	    progn);
 	printf("\n");
 }
