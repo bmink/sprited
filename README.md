@@ -232,8 +232,8 @@ uint8_t <buf_name>[128] =
 ```
 
 Some displays map pixels vertically in their internal display buffer (ie. one
-byte represents an 8 pixel section of a column on the display, which is why
-the `tobytesv` mode is provided.
+byte represents an 8 pixel section of a column on the display; for such cases
+`tobytesv` command is provided.
 
 Happy spriting!
 
