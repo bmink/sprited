@@ -120,6 +120,12 @@ specific angle. The output will be a new sprite file with the rotated sprite.
 
 The below is the output of `sprited <file> rotate 90`:
 
+To create a full set of the sprite rotated 360 degrees in specific increments,
+use `sprited <spritefile.json> rotate360 <increment>`. This will output a
+a sprite set with all degree increments. Eg. if `increment == 15`, then the
+output array will contain 24 sprites: 0deg, 15deg, 30deg, 45deg, all the
+way to 335deg.
+
 ```JSON
 [
   {
@@ -163,11 +169,6 @@ The below is the output of `sprited <file> rotate 90`:
   }
 ]
 ```
-To create a full set of the sprite rotated 360 degrees in specific increments,
-use `sprited <spritefile.json> rotate360 <increment>`. This will output a
-a sprite set with all degree increments. Eg. if `increment == 15`, then the
-output array will contain 24 sprites: 0deg, 15deg, 30deg, 45deg, all the
-way to 335deg.
 
 The rotation is done with an inverse mapping + bilinear interpolation algorithm
 with presets that work OK... but don't expect wonders. Algorithmically rotated
