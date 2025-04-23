@@ -44,7 +44,7 @@ usage:
 
 ## Creating and editing
 
-`sprited` operates on json files that describe one or more sprites. The file
+`sprited` operates on JSON files that describe one or more sprites. The file
 has the following structure:
 
 ```JSON
@@ -91,12 +91,15 @@ has the following structure:
 ]
 ```
 
-The file is an array of sprite objects. A single sprite file will have
-an array with one member. A file containing with an array of more than one
-sprites is a sprite set. Check the "examples" folder for more, well, examples.
+The file is always an array of objects, the above example shows an array with
+one objeft element.
 
-The contents of a sprite file can be displayed on the screen with 'sprited <spritefile.json> display`. Some sprites look better / are meant to be inverted,
-so an `invdisplay` command is also provided.
+
+## Displaying sprites
+
+The contents of a sprite file can be displayed on the screen with 'sprited
+<spritefile.json> display`. Some sprites look better / are meant to be
+inverted, so an `invdisplay` command is also provided.
 
 
 ## Animations
