@@ -108,7 +108,7 @@ inverted, so an `invdisplay` command is also provided.
 
 A file containing more than one sprite can be played back as an animation using
 `sprited <spritefile.json> animate <milliseconds> <loopcnt>` where
-`milliseconds` is the time to wait between frames and the animation will be
+`milliseconds` is the delay between frames and the animation will be
 looped `loopcnt` times. As with displaying sprites, animations can be inverted
 by using the `invanimate` command.
 
@@ -118,18 +118,63 @@ by using the `invanimate` command.
 `sprited <spritefile.json> rotate <degree>` can be used to rotate a sprite a
 specific angle. The output will be a new sprite file with the rotated sprite.
 
+The below is the output of `sprited <file> rotate 90`:
+
+```JSON
+[
+  {
+    "name": "frame_01_90_deg",
+    "width": 32,
+    "height": 32,
+    "pixels": [
+      "................................",
+      "...............X...XXXXXXX......",
+      "..............XXX.XXXXXXXXX.....",
+      ".............XXXXXXXXXXXXXXX....",
+      ".............XXXXXXXXXXXXXXXX...",
+      "............XXXXXXXXXXXXXXXXXX..",
+      "............XXXXXXXXXXXXXXXXXXX.",
+      "............XXXXXXXXXXXXXXXXXXX.",
+      ".............XXXXXXX........XXX.",
+      "..............XXXXX...XXXXXXXXX.",
+      "...............XXX...XXXXXXXX...",
+      "....................XXXXXXXXXXX.",
+      "..........X........XXXXXXXXXXXX.",
+      "...XXXXXXXXX......XXXXXXXXXXXXX.",
+      "...XXXXXXXXXX....XXXXXXXXXXXXXX.",
+      "...XXXXXXXXXXX.XXXXXXX...XXXXXX.",
+      "....XXXX...XXXX.XXXXXXXXX.......",
+      ".....XXX.X.XXXX.XXXXXXXXXXXXXXX.",
+      "......XX...XXXX.XXXXXXXXXXXXXXX.",
+      "......XXXXXXXXX..XXXXXXXX.XXXX..",
+      "......XXXXX.X.X..XXXXXXX......X.",
+      "......XXXXXXX.X..XXXXXXX.XXXXX..",
+      ".....XXX...XXXX.XXXXXXX.XXXXX.X.",
+      "....XXXX.X.XXXX.XXXXXXXXXXXXXX..",
+      "...XXXXX...XXX.XXXXXXX.......XX.",
+      "..XXXXXXXXXXXX..XXXXX...........",
+      "...XXXXXXXXXX...................",
+      ".........XXX....................",
+      "..........X.....................",
+      "................................",
+      "................................",
+      "................................"
+    ]
+  }
+]
+```
 To create a full set of the sprite rotated 360 degrees in specific increments,
 use `sprited <spritefile.json> rotate360 <increment>`. This will output a
 a sprite set with all degree increments. Eg. if `increment == 15`, then the
-output array will contain 24 sprites: 0deg, 15 egs, 30deg, 45deg all the
+output array will contain 24 sprites: 0deg, 15deg, 30deg, 45deg, all the
 way to 335deg.
 
 The rotation is done with an inverse mapping + bilinear interpolation algorithm
-with presets that work OK, but don't expect wonders. Algorithmically rotated
+with presets that work OK... but don't expect wonders. Algorithmically rotated
 pixel art (especially small bitmaps such as most sprites) will almost always
-require hand editing. The expected workflow is to create the main file, then
-create the rotations, then hand-edit the resulting file all the while using
-`display` or `animate` to check the results.
+require hand editing. The expected workflow is to create the main sprite, then
+use `sprited` create the rotations, then hand-edit the resulting file all the
+while using `display` or `animate` to check the results.
 
 The only exception to this are 90deg, 180deg and 270deg rotations, as for those
 the pixels can be mapped 1:1.
@@ -147,9 +192,9 @@ of sprites needing hand editing.
 
 ## Fonts
 
-Newsflash: in the context of drawing pixels on the screen (or in a
-framebuffer), text and fonts are just another set of sprites! Check the "fonts"
-folder for some of my favorite fonts that I use in my projects.
+At the end of the day, and in the context of drawing pixels on the screen (or
+in a framebuffer), text and fonts are just another set of sprites! Check the
+"fonts" folder for some of my favorite fonts that I use in my projects.
 
 Note: generally, it is good practice for a basic font set to provide at least
 the ASCII code point range [0x20 - 0x7e].
