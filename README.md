@@ -124,7 +124,7 @@ a sprite set with all degree increments. Eg. if `increment == 15`, then the
 output array will contain 24 sprites: 0deg, 15deg, 30deg, 45deg, all the
 way to 335deg.
 
-The below is the output of `sprited <file> rotate 90`:
+The below is the output of `sprited domino_cat.json rotate 90`:
 
 ```JSON
 [
@@ -202,6 +202,8 @@ the ASCII code point range [0x20 - 0x7e].
 
 
 ## Conversion to C byte arrays
+
+Output of `sprited domino_cat.json tobytesh`:
 
 ```C
 uint8_t <buf_name>[128] =
