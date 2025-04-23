@@ -203,6 +203,11 @@ the ASCII code point range [0x20 - 0x7e].
 
 ## Conversion to C byte arrays
 
+Use `sprited <spritefile.json> tobytesh` and `sprited <spritefile.json> tobytesv` to output the sprite(s) in the intput file as byte arrays you can compile
+into your program. If the input contains only one sprite then the output
+will be one array of `uint8_t`, if it contains more than one sprites then
+the output will be an array of arrays of `uint8_t`.
+
 Output of `sprited domino_cat.json tobytesh`:
 
 ```C
@@ -225,11 +230,6 @@ uint8_t <buf_name>[128] =
           0x00, 0xee, 0xff, 0xf0, 0x01, 0xae, 0xfb, 0xe0,
           0x01, 0x56, 0xfb, 0xc0, 0x00, 0x00, 0x00, 0x00 };
 ```
-
-Use `sprited <spritefile.json> tobytesh` and `sprited <spritefile.json> tobytesv` to output the sprite(s) in the intput file as byte arrays you can compile
-into your program. If the input contains only one sprite then the output
-will be one array of `uint8_t`, if it contains more than one sprites then
-the output will be an array of arrays of `uint8_t`.
 
 Some displays map pixels vertically in their internal display buffer (ie. one
 byte represents an 8 pixel section of a column on the display, which is why
