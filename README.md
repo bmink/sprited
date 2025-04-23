@@ -83,7 +83,7 @@ To create a full set of the sprite rotated 360 degrees in specific increments,
 use `sprited <spritefile.json> rotate360 <increment>`. This will output a
 a sprite set with all degree increments. Eg. if `increment == 15`, then the
 output array will contain 24 sprites: 0deg, 15deg, 30deg, 45deg, all the
-way to 335deg.
+way to 345deg.
 
 The below is the output of `sprited domino_cat.json rotate 90`:
 
