@@ -135,8 +135,9 @@ The rotation is done with an inverse mapping + bilinear interpolation algorithm
 with thresholds that work OK... but don't expect wonders. Algorithmically
 rotated pixel art (especially small bitmaps such as most sprites) will almost
 always require post-editing by hand. The expected workflow is to create the
-main sprite, then use `sprited` create the rotations, then hand-edit the
-resulting file all the while using `display` or `animate` to check the results.
+main sprite, then use `sprited` to create the rotations, then hand-edit the
+resulting file, all the while using `display` or `animate` to check the
+results.
 
 The only exception to this are 90deg, 180deg and 270deg rotations, as for those
 the pixels can be mapped 1:1.
