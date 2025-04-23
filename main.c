@@ -559,7 +559,7 @@ sprite2bytes(barr_t *sprites, int horiz)
 			fprintf(stderr, "Sprite with /height is not divisible"
 			    " by 8\n");
 			return;
-	}
+		}
 
 	}
 
@@ -570,22 +570,17 @@ sprite2bytes(barr_t *sprites, int horiz)
 
 	bytecnt = bitcnt / 8;
 
-	if(barr_cnt(sprites) == 1) {
-		printf("uint8_t	<buf_name>[%d] = \n", bytecnt);
-	} else {
-		printf("uint8_t	<buf_array_name>[%d][%d] = {\n",
-		    barr_cnt(sprites), bytecnt);
-	}
+	printf("uint8_t	<buf_name>[] = {\n\n");
 
 	for(spriteidx = 0; spriteidx < barr_cnt(sprites); ++spriteidx) {
 
 		sp = (sprite_t *)barr_elem(sprites, spriteidx);
 		byte = 0;
 		printedcnt = 0;
-		printf("\t{ /* \"%s\" (%dx%d): %s mapping */\n",
+		printf("\t/* \"%s\" (%dx%d): %s mapping */\n",
 		    bget(sp->sp_name), sp->sp_width, sp->sp_height,
 		    horiz?"horizontal":"vertical");
-		printf("\t  ");
+		printf("\t   ");
 		if(horiz) {
 			for(y = 0; y < sp->sp_height; ++y) {
 				for(x = 0; x < sp->sp_width; x += 8) {
@@ -602,7 +597,7 @@ sprite2bytes(barr_t *sprites, int horiz)
 						printf(",");
 
 						if(printedcnt % 8 == 0)
-							printf("\n\t  ");
+							printf("\n\t   ");
 						else
 							printf(" ");
 					}
@@ -626,7 +621,7 @@ sprite2bytes(barr_t *sprites, int horiz)
 						printf(",");
 
 						if(printedcnt % 8 == 0)
-							printf("\n\t  ");
+							printf("\n\t   ");
 						else
 							printf(" ");
 					}
@@ -635,17 +630,10 @@ sprite2bytes(barr_t *sprites, int horiz)
 				}
 			}
 		}
-		if(barr_cnt(sprites) == 1) 
-			printf(" };\n");
-		else
-			printf(" }%s\n",
-			    spriteidx < barr_cnt(sprites) - 1?",\n":"");
+		printf("%s\n", spriteidx < barr_cnt(sprites) - 1?",\n":"");
 	}
 
-	if(barr_cnt(sprites) > 1)
-		printf("};\n\n");
-	else
-		printf("\n");
+	printf("};\n\n");
 }
 
 
