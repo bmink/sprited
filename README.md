@@ -4,6 +4,8 @@ Tool to create, edit, animate & manipulate sprites.
 
 ![Demo of sprited](demo/sprited_demo.gif)
 
+## Usage
+
 ```
 usage:
 
@@ -97,7 +99,7 @@ one objeft element.
 
 ## Displaying sprites
 
-The contents of a sprite file can be displayed on the screen with 'sprited
+The contents of a sprite file can be displayed on the screen with `sprited
 <spritefile.json> display`. Some sprites look better / are meant to be
 inverted, so an `invdisplay` command is also provided.
 
