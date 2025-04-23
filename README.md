@@ -4,45 +4,6 @@ Tool to create, edit, animate & manipulate sprites.
 
 ![Demo of sprited](demo/sprited_demo.gif)
 
-## Usage
-
-```
-usage:
-
-  Display sprite(s):
-
-    sprited <spritefile.json> display
-    sprited <spritefile.json> invdisplay
-
-  Playback sprite animation:
-
-    sprited <spritefile.json> animate <milliseconds> <loopcnt>
-    sprited <spritefile.json> invanimate <milliseconds> <loopcnt>
-
-  Rotate sprite to specified degrees:
-
-    sprited <spritefile.json> rotate360 <degree>
-
-  Create 360 degree rotation sprite sheet:
-
-    sprited <spritefile.json> rotate360 <degree increments>
-
-  Flip (mirror) horizontally:
-
-    sprited <spritefile.json> fliph
-
-  Flip (mirror) vertically:
-
-    sprited <spritefile.json> flipv
-
-  Convert to C horizontal-mapped byte array:
-
-    sprited <spritefile.json> tobytesh
-
-  Convert to C vertical-mapped byte array:
-
-    sprited <spritefile.json> tobytesv
-```
 
 ## Creating and editing
 
@@ -93,8 +54,8 @@ has the following structure:
 ]
 ```
 
-The file is always an array of objects, the above example shows an array with
-one objeft element.
+(The file is always an array of objects, the above example shows an array with
+one object element.)
 
 
 ## Displaying sprites
@@ -171,17 +132,18 @@ The below is the output of `sprited domino_cat.json rotate 90`:
 ```
 
 The rotation is done with an inverse mapping + bilinear interpolation algorithm
-with presets that works OK... but don't expect wonders. Algorithmically rotated
-pixel art (especially small bitmaps such as most sprites) will almost always
-require hand editing. The expected workflow is to create the main sprite, then
-use `sprited` create the rotations, then hand-edit the resulting file all the
-while using `display` or `animate` to check the results.
+with thresholds that work OK... but don't expect wonders. Algorithmically
+rotated pixel art (especially small bitmaps such as most sprites) will almost
+always require hand editing. The expected workflow is to create the main
+sprite, then use `sprited` create the rotations, then hand-edit the resulting
+file all the while using `display` or `animate` to check the results.
 
 The only exception to this are 90deg, 180deg and 270deg rotations, as for those
 the pixels can be mapped 1:1.
 
 Note: for the rotation commands, the input file must contain exactly one sprite
 of square dimensions (ie. `width` the same as `height`).
+
 
 ## Mirroring
 
