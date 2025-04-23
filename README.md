@@ -52,7 +52,7 @@ has the following structure:
 ```JSON
 [
   {
-    "name": "Domino Cat",
+    "name": "domino_cat",
     "width": 32,
     "height": 32,
     "pixels": [
@@ -129,7 +129,7 @@ The below is the output of `sprited <file> rotate 90`:
 ```JSON
 [
   {
-    "name": "frame_01_90_deg",
+    "name": "domino_cat_90_deg",
     "width": 32,
     "height": 32,
     "pixels": [
