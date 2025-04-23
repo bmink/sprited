@@ -1,6 +1,6 @@
 # sprited
 
-Tool to create, edit, animate & manipulate sprites.
+Create, edit, animate & manipulate sprites.
 
 ![Demo of sprited](demo/sprited_demo.gif)
 
