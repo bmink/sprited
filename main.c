@@ -527,7 +527,7 @@ sprite_issquare(sprite_t *sp)
 
 
 void
-sprite2bytes(barr_t *sprites, int horiz)
+sprite2bytes(barr_t *sprites, int horiz, const char *fontn)
 {
 	int		bitcnt;
 	int		bytecnt;
@@ -538,48 +538,51 @@ sprite2bytes(barr_t *sprites, int horiz)
 	int		printedcnt;
 	int		i;
 	int		spriteidx;	
+	bstr_t		*char_table;
+	int		offset;
+
+	char_table = NULL;
 
 	if(barr_cnt(sprites) == 0) {
-		return;
+		goto end_label;
 	}
 
-	bitcnt = 0;
 	for(sp = (sprite_t *)barr_begin(sprites);
 	    sp < (sprite_t *)barr_end(sprites); ++sp) {
-		if(sp == (sprite_t *)barr_begin(sprites)) {
-			bitcnt = bstrlen(sp->sp_pixels);
-		} else {
-			if(bitcnt != bstrlen(sp->sp_pixels)) {
-				fprintf(stderr, "Sprites in file have"
-				    " differing pixel counts\n");
-				return;
-			}
+		if(horiz && sp->sp_width % 8) {
+			fprintf(stderr, "Sprite \"%s\" width is not divisible"
+			    " by 8\n", bget(sp->sp_name));
+			goto end_label;
+		} else
+		if(!horiz && sp->sp_height % 8) {
+			fprintf(stderr, "Sprite \"%s\" height is not divisible"
+			    " by 8\n", bget(sp->sp_name));
+			goto end_label;
 		}
-		if(sp->sp_width % 8 || sp->sp_height % 8) {
-			fprintf(stderr, "Sprite with /height is not divisible"
-			    " by 8\n");
-			return;
-		}
-
 	}
 
-	if(bitcnt <= 0) {
-		fprintf(stderr, "Invalid pixel count\n");
-		return;
+	char_table = binit();
+	if(char_table == NULL) {
+		fprintf(stderr, "Could not allocate char_table\n");
+		goto end_label;
 	}
+	bprintf(char_table, "font_%s_chars[] = {\n", fontn);
 
-	bytecnt = bitcnt / 8;
-
-	printf("uint8_t	<buf_name>[] = {\n\n");
+	printf("uint8_t	font_%s_bitmaps[] = {\n\n", fontn);
+	offset = 0;
 
 	for(spriteidx = 0; spriteidx < barr_cnt(sprites); ++spriteidx) {
-
 		sp = (sprite_t *)barr_elem(sprites, spriteidx);
+
+		bitcnt = bstrlen(sp->sp_pixels);
+		bytecnt = bitcnt / 8;
+
 		byte = 0;
 		printedcnt = 0;
-		printf("\t/* \"%s\" (%dx%d): %s mapping */\n",
+		printf("\t/* \"%s\" (%dx%d): %s mapping, %d pixels,"
+		    " %d bytes */\n",
 		    bget(sp->sp_name), sp->sp_width, sp->sp_height,
-		    horiz?"horizontal":"vertical");
+		    horiz?"horizontal":"vertical", bitcnt, bytecnt);
 		printf("\t   ");
 		if(horiz) {
 			for(y = 0; y < sp->sp_height; ++y) {
@@ -631,9 +634,32 @@ sprite2bytes(barr_t *sprites, int horiz)
 			}
 		}
 		printf("%s\n", spriteidx < barr_cnt(sprites) - 1?",\n":"");
+
+		
+		bprintf(char_table, "\n\t/* %s */\n", bget(sp->sp_name));
+		bprintf(char_table, "\t{ %d,\t%d,\t%d};\n", sp->sp_width,
+		    offset, bytecnt);
+
+		offset += bytecnt;
 	}
 
 	printf("};\n\n");
+
+	bprintf(char_table, "};\n");
+
+	printf("\n%s\n\n", bget(char_table));
+
+	printf("font_t font_%s = {\n", fontn);
+	printf("	<fill in>,\n");
+	printf("	<fill in>,\n");
+	printf("	<fill in>,\n");
+	printf("	font_%s_bitmaps\n", fontn);
+	printf("};");
+	
+
+end_label:
+
+	buninit(&char_table);
 }
 
 
@@ -923,13 +949,20 @@ main(int argc, char **argv)
 		    !xstrcmp(argv[2], "fliph")?1:0);
 	} else
 	if(!xstrcmp(argv[2], "tobytesh") || !xstrcmp(argv[2], "tobytesv")) {
-		if(argc != 3) {
+		if(argc != 4) {
 			usage(execn);
 			err = -1;
 			goto end_label;
 		}
 
-		sprite2bytes(sprites, !xstrcmp(argv[2], "tobytesh")?1:0);
+		if(xstrempty(argv[3])) {
+			fprintf(stderr, "Invalid font name\n", stderr);
+			err = -1;
+			goto end_label;
+		}
+
+		sprite2bytes(sprites, !xstrcmp(argv[2], "tobytesh")?1:0,
+		    argv[3]);
 	} else
 	if(!xstrcmp(argv[2], "c64toascii")) {
 		if(argc != 3) {
@@ -996,7 +1029,7 @@ usage(const char *progn)
 	printf("\n");
 	printf("  Convert to C horizontal-mapped byte array:\n");
 	printf("\n");
-	printf("    %s <spritefile.json> tobytesh\n",
+	printf("    %s <spritefile.json> tobytesh <fontname>\n",
 	    progn);
 	printf("\n");
 	printf("  Convert to C vertical-mapped byte array:\n");
