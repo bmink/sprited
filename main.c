@@ -527,7 +527,136 @@ sprite_issquare(sprite_t *sp)
 
 
 void
-sprite2bytes(barr_t *sprites, int horiz, const char *fontn)
+sprite2bytes(barr_t *sprites, int horiz, const char *bufn)
+{
+	int		bitcnt;
+	int		bytecnt;
+	sprite_t	*sp;
+	int		x;
+	int		y;
+	uint8_t		byte;
+	int		printedcnt;
+	int		i;
+	int		spriteidx;	
+
+	if(barr_cnt(sprites) == 0) {
+		return;
+	}
+		
+	bitcnt = 0;
+	for(sp = (sprite_t *)barr_begin(sprites);
+	    sp < (sprite_t *)barr_end(sprites); ++sp) {
+		if(sp == (sprite_t *)barr_begin(sprites)) {
+			bitcnt = bstrlen(sp->sp_pixels);
+		} else {
+			if(bstrlen(sp->sp_pixels) != bitcnt) {
+				fprintf(stderr, "Sprites have differing"
+				    " pixel counts\n");
+				return;
+			}
+		}
+
+		if(horiz && sp->sp_width % 8) {
+			fprintf(stderr, "Sprite \"%s\" width is not divisible"
+			    " by 8\n", bget(sp->sp_name));
+			return;
+		} else
+		if(!horiz && sp->sp_height % 8) {
+			fprintf(stderr, "Sprite \"%s\" height is not divisible"
+			    " by 8\n", bget(sp->sp_name));
+			return;
+		}
+	}
+
+	bytecnt = bitcnt / 8;
+
+	if(barr_cnt(sprites) == 1)
+		printf("uint8_t	%s_buf[%d] = {\n", bufn, bytecnt);
+	else
+		printf("uint8_t	%s_buf[%d][%d] = {\n\n", bufn,
+		    barr_cnt(sprites), bytecnt);
+
+	for(spriteidx = 0; spriteidx < barr_cnt(sprites); ++spriteidx) {
+		sp = (sprite_t *)barr_elem(sprites, spriteidx);
+
+
+		byte = 0;
+		printedcnt = 0;
+		printf("\t/* \"%s\" (%dx%d): %s mapping, %d pixels,"
+		    " %d bytes */\n",
+		    bget(sp->sp_name), sp->sp_width, sp->sp_height,
+		    horiz?"horizontal":"vertical", bitcnt, bytecnt);
+		if(barr_cnt(sprites) == 1)
+			printf("\t   ");
+		else
+			printf("\t{  ");
+
+		if(horiz) {
+			for(y = 0; y < sp->sp_height; ++y) {
+				for(x = 0; x < sp->sp_width; x += 8) {
+					for(i = 0; i < 8; ++i) {
+						byte <<= 1;
+						if(ispixelon(sp, x + i, y))
+							byte |= 0x01;
+
+					}
+
+					printf("0x%02x", byte);
+					++printedcnt;
+					if(printedcnt < bytecnt) {
+						printf(",");
+
+						if(printedcnt % 8 == 0)
+							printf("\n\t   ");
+						else
+							printf(" ");
+					}
+
+					byte = 0;
+				}
+			}
+		} else { /* Vertical mapping */
+
+			for(y = 0; y < sp->sp_height; y += 8) {
+				for(x = 0; x < sp->sp_width; ++x) {
+					for(i = 7; i >= 0; --i) {
+						byte <<= 1;
+						if(ispixelon(sp, x, y + i))
+							byte |= 0x01;
+					}
+
+					printf("0x%02x", byte);
+					++printedcnt;
+					if(printedcnt < bytecnt) {
+						printf(",");
+
+						if(printedcnt % 8 == 0)
+							printf("\n\t   ");
+						else
+							printf(" ");
+					}
+
+					byte = 0;
+				}
+			}
+		}
+
+		if(barr_cnt(sprites) == 1) {
+			printf(" };\n");
+		} else {
+			printf("}%s\n",
+			    spriteidx < barr_cnt(sprites) - 1?",\n":"");
+		}
+
+	}
+
+	if(barr_cnt(sprites) > 1)
+		printf("};\n\n");
+}
+
+
+void
+sprite2font(barr_t *sprites, int horiz, const char *fontn)
 {
 	int		bitcnt;
 	int		bytecnt;
@@ -566,7 +695,7 @@ sprite2bytes(barr_t *sprites, int horiz, const char *fontn)
 		fprintf(stderr, "Could not allocate char_table\n");
 		goto end_label;
 	}
-	bprintf(char_table, "font_%s_chars[] = {\n", fontn);
+	bprintf(char_table, "font_char_t font_%s_chars[] = {\n", fontn);
 
 	printf("uint8_t	font_%s_bitmaps[] = {\n\n", fontn);
 	offset = 0;
@@ -637,8 +766,9 @@ sprite2bytes(barr_t *sprites, int horiz, const char *fontn)
 
 		
 		bprintf(char_table, "\n\t/* %s */\n", bget(sp->sp_name));
-		bprintf(char_table, "\t{ %d,\t%d,\t%d};\n", sp->sp_width,
-		    offset, bytecnt);
+		bprintf(char_table, "\t{ %d,\t%d,\t%d}%s\n", sp->sp_width,
+		    offset, bytecnt,
+		    spriteidx < barr_cnt(sprites) - 1?",":"");
 
 		offset += bytecnt;
 	}
@@ -653,15 +783,15 @@ sprite2bytes(barr_t *sprites, int horiz, const char *fontn)
 	printf("	<fill in>,\n");
 	printf("	<fill in>,\n");
 	printf("	<fill in>,\n");
+	printf("	font_%s_chars,\n", fontn);
 	printf("	font_%s_bitmaps\n", fontn);
-	printf("};");
+	printf("};\n");
 	
 
 end_label:
 
 	buninit(&char_table);
 }
-
 
 
 void outpsp(barr_t *sprites, int idx, const char *nam, int last)
@@ -694,6 +824,7 @@ void outpsp(barr_t *sprites, int idx, const char *nam, int last)
 	printf("    ]\n");
 	printf("  }%s\n", last?"":",");
 }
+
 
 void
 conv_c64_rom_order_to_ascii(barr_t *sprites)
@@ -956,12 +1087,28 @@ main(int argc, char **argv)
 		}
 
 		if(xstrempty(argv[3])) {
-			fprintf(stderr, "Invalid font name\n", stderr);
+			fprintf(stderr, "Invalid array name\n", stderr);
 			err = -1;
 			goto end_label;
 		}
 
 		sprite2bytes(sprites, !xstrcmp(argv[2], "tobytesh")?1:0,
+		    argv[3]);
+	} else
+	if(!xstrcmp(argv[2], "tofonth") || !xstrcmp(argv[2], "tofontv")) {
+		if(argc != 4) {
+			usage(execn);
+			err = -1;
+			goto end_label;
+		}
+
+		if(xstrempty(argv[3])) {
+			fprintf(stderr, "Invalid font name\n", stderr);
+			err = -1;
+			goto end_label;
+		}
+
+		sprite2font(sprites, !xstrcmp(argv[2], "tofonth")?1:0,
 		    argv[3]);
 	} else
 	if(!xstrcmp(argv[2], "c64toascii")) {
@@ -1027,14 +1174,24 @@ usage(const char *progn)
 	printf("    %s <spritefile.json> flipv\n",
 	    progn);
 	printf("\n");
-	printf("  Convert to C horizontal-mapped byte array:\n");
+	printf("  Convert sprite(s) to generic C horizontal-mapped bytes:\n");
 	printf("\n");
-	printf("    %s <spritefile.json> tobytesh <fontname>\n",
+	printf("    %s <spritefile.json> tobytesh <arrayname>\n",
 	    progn);
 	printf("\n");
-	printf("  Convert to C vertical-mapped byte array:\n");
+	printf("  Convert sprite(s) to generic C certical-mapped bytes:\n");
 	printf("\n");
-	printf("    %s <spritefile.json> tobytesv\n",
+	printf("    %s <spritefile.json> tobytesv <arrayname>\n",
+	    progn);
+	printf("\n");
+	printf("  Convert sprites to C horizontal-mapped font:\n");
+	printf("\n");
+	printf("    %s <spritefile.json> tofonth <fontname>\n",
+	    progn);
+	printf("\n");
+	printf("  Convert sprites to C vertical-mapped font:\n");
+	printf("\n");
+	printf("    %s <spritefile.json> tofontv <fontname>\n",
 	    progn);
 	printf("\n");
 	printf("  Convert font from PETSCII (Commodore 8-bit"
