@@ -198,7 +198,7 @@ of my favorite fonts that I use in my projects.
 Use `sprited <spritefile.json> tofonth <fontname>` and `sprited
 <spritefile.json> tofontv <fontname>` to output the sprites in the intput
 file as several arrays and structs that you can use to write text into
-display buffers. See [simple_displays/(https://github.com/bmink/simple_displays)
+display buffers. See [simple_displays](https://github.com/bmink/simple_displays)
 for more information on this.
 
 
