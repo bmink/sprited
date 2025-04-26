@@ -154,25 +154,18 @@ sprites that are symmetrical along one or both axes, to cut down on the number
 of sprites needing hand editing. 
 
 
-## Fonts
+## Conversion of sprites to C byte arrays
 
-At the end of the day, and in the context of drawing pixels on the screen (or
-in a framebuffer), text and fonts are just another set of sprites! Check the
-"fonts" folder for some of my favorite fonts that I use in my projects.
+Use `sprited <spritefile.json> tobytesh <bufname>` and `sprited
+<spritefile.json> tobytesv <bufname>` to output the sprite(s) in the intput
+file as byte arrays you can compile into your program. If the input contains
+one sprite then the output will be a simple byte array. If the input contains
+more than one sprites then the output will be an array of byte arrays.
 
-Note: generally, it is good practice for a basic font set to provide at least
-the ASCII code point range [0x20 - 0x7e].
-
-
-## Conversion to C byte arrays
-
-Use `sprited <spritefile.json> tobytesh` and `sprited <spritefile.json> tobytesv` to output the sprite(s) in the intput file as byte arrays you can compile
-into your program.
-
-Output of `sprited domino_cat.json tobytesh`:
+Output of `sprited domino_cat.json tobytesh domino`:
 
 ```C
-uint8_t <buf_name>[] =
+uint8_t domino_buf[] =
         { /* "domino_cat" (32x32): horizontal mapping */
           0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
           0x02, 0x00, 0x00, 0x00, 0x07, 0x00, 0xe0, 0x00,
@@ -195,6 +188,19 @@ uint8_t <buf_name>[] =
 Some displays map pixels vertically in their internal display buffer (ie. one
 byte represents an 8 pixel section of a column on the display; for such cases
 `tobytesv` command is provided.
+
+## Fonts
+
+In the context of drawing pixels on the screen (or in a framebuffer), text
+and fonts are just another set of sprites! Check the "fonts" folder for some
+of my favorite fonts that I use in my projects.
+
+Use `sprited <spritefile.json> tofonth <fontname>` and `sprited
+<spritefile.json> tofontv <fontname>` to output the sprites in the intput
+file as several arrays and structs that you can use to write text into
+display buffers. See [simple_displays/(https://github.com/bmink/simple_displays)
+for more information on this.
+
 
 Happy spriting!
 

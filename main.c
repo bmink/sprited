@@ -1176,12 +1176,12 @@ usage(const char *progn)
 	printf("\n");
 	printf("  Convert sprite(s) to generic C horizontal-mapped bytes:\n");
 	printf("\n");
-	printf("    %s <spritefile.json> tobytesh <arrayname>\n",
+	printf("    %s <spritefile.json> tobytesh <bufname>\n",
 	    progn);
 	printf("\n");
 	printf("  Convert sprite(s) to generic C certical-mapped bytes:\n");
 	printf("\n");
-	printf("    %s <spritefile.json> tobytesv <arrayname>\n",
+	printf("    %s <spritefile.json> tobytesv <bufname>\n",
 	    progn);
 	printf("\n");
 	printf("  Convert sprites to C horizontal-mapped font:\n");
