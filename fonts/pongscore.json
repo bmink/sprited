@@ -1,0 +1,155 @@
+[
+  {
+    "_comment0": "Digits used in the original Pong implmementation",
+    "_comment1": "(Original Pong was done all in hardware, btw)",
+
+    "name": "ASCII 0x30 '0'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "XXXX.",
+      "X..X.",
+      "X..X.",
+      "X..X.",
+      "X..X.",
+      "X..X.",
+      "X..X.",
+      "XXXX."
+    ]
+  },
+  {
+    "name": "ASCII 0x31 '1'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X."
+    ]
+  },
+  {
+    "name": "ASCII 0x32 '2'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "XXXX.",
+      "...X.",
+      "...X.",
+      "XXXX.",
+      "X....",
+      "X....",
+      "X....",
+      "XXXX."
+    ]
+  },
+  {
+    "name": "ASCII 0x33 '3'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "XXXX.",
+      "...X.",
+      "...X.",
+      "XXXX.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "XXXX."
+    ]
+  },
+  {
+    "name": "ASCII 0x34 '4'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "X..X.",
+      "X..X.",
+      "X..X.",
+      "XXXX.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X."
+    ]
+  },
+  {
+    "name": "ASCII 0x35 '5'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "XXXX.",
+      "X....",
+      "X....",
+      "XXXX.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "XXXX."
+    ]
+  },
+  {
+    "name": "ASCII 0x36 '6'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "X....",
+      "X....",
+      "X....",
+      "XXXX.",
+      "X..X.",
+      "X..X.",
+      "X..X.",
+      "XXXX."
+    ]
+  },
+  {
+    "name": "ASCII 0x37 '7'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "XXXX.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X."
+    ]
+  },
+  {
+    "name": "ASCII 0x38 '8'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "XXXX.",
+      "X..X.",
+      "X..X.",
+      "XXXX.",
+      "X..X.",
+      "X..X.",
+      "X..X.",
+      "XXXX."
+    ]
+  },
+  {
+    "name": "ASCII 0x39 '9'",
+    "width": 5,
+    "height": 8,
+    "pixels": [
+      "XXXX.",
+      "X..X.",
+      "X..X.",
+      "XXXX.",
+      "...X.",
+      "...X.",
+      "...X.",
+      "...X."
+    ]
+  }
+]
