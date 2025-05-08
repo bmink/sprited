@@ -1,6 +1,6 @@
 # sprited
 
-Create, edit, animate & manipulate sprites.
+Create, edit, animate & manipulate sprites & fonts.
 
 ![Demo of sprited](demo/sprited_demo.gif)
 
