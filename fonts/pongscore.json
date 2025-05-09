@@ -1,7 +1,6 @@
 [
   {
     "_comment0": "Digits used in the original Pong implmementation",
-    "_comment1": "(Original Pong was done all in hardware, btw)",
 
     "name": "ASCII 0x30 '0'",
     "width": 5,
